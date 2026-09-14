@@ -623,8 +623,50 @@
     (function () {
         'use strict';
 
-        // CUSTOMIZE: Event date
-        const EVENT_DATE = new Date(2026, 10, 15, 18, 0, 0);
+        // === Storybook Controller ===
+        class Storybook {
+            constructor() {
+                this.pages = document.querySelectorAll('.page');
+                this.currentIndex = 0;
+                
+                this.pages.forEach((page, i) => {
+                    if (i === 0) page.classList.add('active');
+                    else page.classList.add('upcoming');
+                });
+            }
+
+            nextPage() {
+                if (this.currentIndex >= this.pages.length - 1) return;
+                
+                const currentPage = this.pages[this.currentIndex];
+                const nextPage = this.pages[this.currentIndex + 1];
+                
+                currentPage.classList.remove('active');
+                currentPage.classList.add('flipped');
+                
+                nextPage.classList.remove('upcoming');
+                nextPage.classList.add('active');
+                
+                this.currentIndex++;
+                this.startPageTimeline(this.currentIndex);
+            }
+
+            startPageTimeline(index) {
+                if (index === 0) {
+                    setTimeout(() => this.nextPage(), 3500); // 3.5s for Welcome
+                } else if (index === 1) {
+                    startSketchAnimationSequence().then(() => {
+                        setTimeout(() => this.nextPage(), 2500); // Wait 2.5s after animation finishes
+                    });
+                } else if (index === 2) {
+                    setTimeout(() => this.nextPage(), 5000); // 5s for Event Details
+                } else if (index === 3) {
+                    setTimeout(() => this.nextPage(), 5000); // 5s for Family
+                }
+            }
+        }
+
+        let storybook;
 
         // === Envelope Gate Animation ===
         const gateScreen = document.getElementById('envelopeGate');
@@ -632,13 +674,11 @@
         const musicToggle = document.getElementById('musicToggle');
         let isMusicPlaying = false;
 
-        function openEnvelope() {
+        function openEnvelope(isAuto = false) {
             if (gateScreen.classList.contains('animating')) return;
             
-            // 1. Start envelope opening animation
             gateScreen.classList.add('animating');
             
-            // 2. Play music
             if (bgMusic) {
                 bgMusic.volume = 0.4;
                 bgMusic.play().then(() => {
@@ -651,18 +691,27 @@
                 });
             }
 
-            // 3. Fade out gate after animation completes
             setTimeout(() => {
                 gateScreen.classList.add('opened');
                 musicToggle.classList.add('active');
+                document.getElementById('bookContainer').style.display = 'block';
                 startPetals();
-                observeReveals();
-            }, 1500); // Wait for envelope card to slide up
+                
+                // Start Storybook Timeline!
+                storybook = new Storybook();
+                storybook.startPageTimeline(0);
+                
+            }, 1500);
         }
 
-        gateScreen.addEventListener('click', openEnvelope);
+        // Auto-open after 2 seconds for hands-free recording
+        setTimeout(() => {
+            openEnvelope(true);
+        }, 2000);
+
+        gateScreen.addEventListener('click', () => openEnvelope(false));
         gateScreen.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') openEnvelope();
+            if (e.key === 'Enter' || e.key === ' ') openEnvelope(false);
         });
 
         // === Music toggle ===
@@ -680,18 +729,8 @@
             isMusicPlaying = !isMusicPlaying;
         });
 
-        // === Scroll Reveal ===
-        function observeReveals() {
-            const reveals = document.querySelectorAll('.reveal');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('visible');
-                });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-            reveals.forEach(el => observer.observe(el));
-        }
-
         // === Countdown ===
+        const EVENT_DATE = new Date(2026, 10, 15, 18, 0, 0);
         function updateCountdown() {
             const diff = EVENT_DATE.getTime() - Date.now();
             if (diff <= 0) {
@@ -700,24 +739,18 @@
                 return;
             }
             const pad = n => String(n).padStart(2, '0');
-            document.getElementById('cdDays').textContent = pad(Math.floor(diff / 86400000));
-            document.getElementById('cdHours').textContent = pad(Math.floor((diff % 86400000) / 3600000));
-            document.getElementById('cdMins').textContent = pad(Math.floor((diff % 3600000) / 60000));
-            document.getElementById('cdSecs').textContent = pad(Math.floor((diff % 60000) / 1000));
+            const cdDays = document.getElementById('cdDays');
+            if (cdDays) {
+                cdDays.textContent = pad(Math.floor(diff / 86400000));
+                document.getElementById('cdHours').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+                document.getElementById('cdMins').textContent = pad(Math.floor((diff % 3600000) / 60000));
+                document.getElementById('cdSecs').textContent = pad(Math.floor((diff % 60000) / 1000));
+            }
         }
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // === Scroll to top ===
-        const scrollTopBtn = document.getElementById('scrollTop');
-        window.addEventListener('scroll', () => {
-            scrollTopBtn.classList.toggle('visible', window.scrollY > 500);
-        }, { passive: true });
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // === Falling Petals Canvas (Pastel Theme) ===
+        // === Falling Petals Canvas ===
         const canvas = document.getElementById('petalCanvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
@@ -744,11 +777,10 @@
                 this.wobbleSpeed = 0.01 + Math.random() * 0.02;
                 this.opacity = 0.4 + Math.random() * 0.4;
                 
-                // Pastel colors: Blush, Lavender, Soft White
                 const colors = [
-                    'rgba(245, 211, 211, OPACITY)', // blush
-                    'rgba(255, 255, 255, OPACITY)', // white
-                    'rgba(216, 195, 216, OPACITY)'  // lavender
+                    'rgba(245, 211, 211, OPACITY)',
+                    'rgba(255, 255, 255, OPACITY)',
+                    'rgba(216, 195, 216, OPACITY)'
                 ];
                 this.color = colors[Math.floor(Math.random() * colors.length)];
             }
@@ -764,7 +796,6 @@
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.rotation * Math.PI / 180);
                 
-                // Draw petal shape
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
                 ctx.bezierCurveTo(-this.size, this.size/2, -this.size/2, this.size, 0, this.size);
@@ -831,23 +862,19 @@
                 function runSequence() {
                     Promise.all(images.map(item => startSketching(item.img, item.config)))
                         .then(() => {
-                            // 1. Fade IN animated photos
                             images.forEach(item => {
                                 document.getElementById(item.config.animatedPhotoId).classList.add('visible');
                             });
                             
-                            // 2. Wait a bit, then start merge animation
                             setTimeout(() => {
                                 images.forEach(item => {
                                     document.getElementById(item.config.wrapperId).classList.add(item.config.mergeClass);
                                 });
                                 
-                                // 3. Show final illustration shortly after merge begins
                                 setTimeout(() => {
                                     const finalWrapper = document.getElementById('finalTogetherWrapper');
                                     finalWrapper.classList.add('visible');
                                     
-                                    // Sequence fully complete, resolve master promise
                                     setTimeout(resolveSequence, 1200);
                                 }, 800);
                             }, 1500);
