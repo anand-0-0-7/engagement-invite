@@ -324,7 +324,7 @@
             pointer-events: none;
             opacity: 0;
             z-index: 10;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease, left 0.05s linear, top 0.05s linear;
             transform: translate(-10px, -20px); /* Adjust to align pencil tip */
         }
         
@@ -715,7 +715,7 @@
                 storybook = new Storybook();
                 storybook.startPageTimeline(0);
                 
-            }, 1500);
+            }, 3000);
         }
 
 
@@ -955,7 +955,7 @@
                         setTimeout(() => {
                             origPhoto.classList.add('fade-out');
                             if (pencil) pencil.style.opacity = '1';
-                        }, 100);
+                        }, 800); // Start 800ms after function is called
                         
                         function drawFrame() {
                             sCtx.fillStyle = 'rgba(70, 60, 60, 0.4)';
@@ -973,11 +973,14 @@
                             if (i < edges.length) {
                                 requestAnimationFrame(drawFrame);
                             } else {
-                                if (pencil) pencil.style.opacity = '0';
-                                setTimeout(resolve, 800);
+                                setTimeout(() => {
+                                    if (pencil) pencil.style.opacity = '0';
+                                }, 500); // Pencil lingers for 0.5s before fading
+                                setTimeout(resolve, 1500);
                             }
                         }
-                        drawFrame();
+                        // Start drawing slightly after pencil fades in
+                        setTimeout(drawFrame, 900);
                     });
                 }
             });
