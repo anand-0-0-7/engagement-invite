@@ -296,7 +296,7 @@
             border-radius: 50%; padding: 6px;
             background: linear-gradient(135deg, var(--blush), var(--sage-light));
             box-shadow: 0 10px 40px rgba(212, 154, 154, 0.3);
-            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease;
+            transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2.5s ease;
         }
         @media (min-width: 480px) {
             .couple__photo-wrapper { width: 220px; height: 220px; padding: 8px; }
@@ -313,7 +313,7 @@
         .couple__photo-final {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; object-position: top center; border-radius: 50%;
-            opacity: 0; z-index: 2; transition: opacity 1.5s ease-in-out;
+            opacity: 0; z-index: 2; transition: opacity 2.5s ease-in-out;
         }
         .couple__photo-final.visible { opacity: 1; }
         .fade-out { opacity: 0 !important; }
@@ -471,7 +471,7 @@
             </div>
         </div>
         
-        <div class="gate__tap-text">Tap to open & play music</div>
+        <div class="gate__tap-text">Tap to open</div>
     </div>
 
     <!-- ================================================================
@@ -653,15 +653,15 @@
 
             startPageTimeline(index) {
                 if (index === 0) {
-                    setTimeout(() => this.nextPage(), 3500); // 3.5s for Welcome
+                    setTimeout(() => this.nextPage(), 5000); // 5s for Welcome
                 } else if (index === 1) {
                     startSketchAnimationSequence().then(() => {
-                        setTimeout(() => this.nextPage(), 2500); // Wait 2.5s after animation finishes
+                        setTimeout(() => this.nextPage(), 4000); // Wait 4s after animation finishes
                     });
                 } else if (index === 2) {
-                    setTimeout(() => this.nextPage(), 5000); // 5s for Event Details
+                    setTimeout(() => this.nextPage(), 7000); // 7s for Event Details
                 } else if (index === 3) {
-                    setTimeout(() => this.nextPage(), 5000); // 5s for Family
+                    setTimeout(() => this.nextPage(), 7000); // 7s for Family
                 }
             }
         }
@@ -704,10 +704,7 @@
             }, 1500);
         }
 
-        // Auto-open instantly for hands-free recording
-        setTimeout(() => {
-            openEnvelope(true);
-        }, 100);
+
 
         gateScreen.addEventListener('click', () => openEnvelope(false));
         gateScreen.addEventListener('keydown', e => {
@@ -871,13 +868,15 @@
                                     document.getElementById(item.config.wrapperId).classList.add(item.config.mergeClass);
                                 });
                                 
+                                // 3. Show final illustration shortly after merge begins
                                 setTimeout(() => {
                                     const finalWrapper = document.getElementById('finalTogetherWrapper');
                                     finalWrapper.classList.add('visible');
                                     
-                                    setTimeout(resolveSequence, 1200);
-                                }, 800);
-                            }, 1500);
+                                    // Sequence fully complete, resolve master promise
+                                    setTimeout(resolveSequence, 2000);
+                                }, 1500);
+                            }, 2500);
                         });
                 }
                 
@@ -934,7 +933,7 @@
                         sCtx.fillRect(0, 0, width, height);
                         
                         let i = 0;
-                        const batchSize = Math.max(15, Math.floor(edges.length / 120));
+                        const batchSize = Math.max(8, Math.floor(edges.length / 200));
                         
                         setTimeout(() => {
                             origPhoto.classList.add('fade-out');
