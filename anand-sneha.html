@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💍 Anand & Sneha — Engagement Ceremony</title>
+
+    <!-- ===================== WhatsApp / Open Graph Meta Tags ===================== -->
+    <meta property="og:title" content="💍 Anand & Sneha — Engagement Ceremony" />
+    <meta property="og:description" content="You are cordially invited to celebrate our ring ceremony! 📅 Nov 21, 2026 📍 Legardenia, Patna" />
+    <meta property="og:image" content="https://anand-0-0-7.github.io/engagement-invite/assets/engagement_kids_illustration_1789398233565.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="1200" />
+    <meta property="og:url" content="https://anand-0-0-7.github.io/engagement-invite/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="💍 Anand & Sneha — Engagement Ceremony" />
+    <meta name="twitter:description" content="You are cordially invited to celebrate our ring ceremony! 📅 Nov 21, 2026 📍 Legardenia, Patna" />
+    <meta name="twitter:image" content="https://anand-0-0-7.github.io/engagement-invite/assets/engagement_kids_illustration_1789398233565.jpg" />
+    <meta name="description" content="You are cordially invited to the engagement ceremony of Anand & Sneha." />
+
+    <!-- ===================== Google Fonts ===================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Alex+Brush&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+           PREMIUM PASTEL PALETTE
+           ============================================================ */
+        :root {
+            --blush: #F5D3D3;
+            --blush-light: #FAEDED;
+            --blush-deep: #D49A9A;
+            --sage: #A4B496;
+            --sage-light: #D4DFCA;
+            --lavender: #D8C3D8;
+            --white: #FFFFFF;
+            --off-white: #FCFAFA;
+            --dark: #2B2626;
+            --gray: #665C5C;
+            --gold: #D4AF37;
+
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-script: 'Alex Brush', cursive;
+            --font-hindi: 'Tiro Devanagari Hindi', serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow: hidden; }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--blush-light) 50%, #f4ecef 100%);
+            color: var(--dark);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============================================================
+           GLASSMORPHISM UTILITY
+           ============================================================ */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.08);
+        }
+
+        /* ============================================================
+           BACKGROUND ELEMENTS (Botanical SVGs + Canvas)
+           ============================================================ */
+        #petalCanvas {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 1;
+        }
+
+        .botanical-bg {
+            position: fixed; z-index: 0;
+            opacity: 0.15; pointer-events: none;
+        }
+        .botanical-bg svg { fill: var(--sage); width: 100%; height: 100%; }
+
+        .botanical-bg--1 { width: 300px; top: -50px; left: -50px; transform: rotate(15deg); }
+        .botanical-bg--2 { width: 400px; bottom: -100px; right: -80px; transform: rotate(-30deg); opacity: 0.1; }
+        .botanical-bg--3 { width: 200px; top: 40%; right: -50px; transform: rotate(-110deg); }
+
+        /* ============================================================
+           ENVELOPE GATE (Interactive)
+           ============================================================ */
+        #envelopeGate {
+            position: fixed; inset: 0; z-index: 1000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, var(--white) 0%, var(--blush-light) 100%);
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+        }
+
+        #envelopeGate.opened {
+            opacity: 0; visibility: hidden; pointer-events: none;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 320px; height: 220px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .envelope {
+            position: relative; width: 100%; height: 100%;
+            background: var(--blush);
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Back of the envelope */
+        .envelope::before {
+            content: ''; position: absolute; inset: 0;
+            background: var(--blush); border-radius: 8px; z-index: 1;
+        }
+
+        /* The invitation card peeking out inside */
+        .envelope-card {
+            position: absolute; bottom: 10px; left: 10px; right: 10px; height: 90%;
+            background: var(--white);
+            border-radius: 6px; z-index: 2;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--blush-light);
+        }
+        
+        .envelope-card-names {
+            font-family: var(--font-script); font-size: 2rem; color: var(--dark);
+        }
+
+        /* Front flaps */
+        .envelope-front {
+            position: absolute; inset: 0; z-index: 3;
+            overflow: hidden; border-radius: 8px; pointer-events: none;
+        }
+        
+        .envelope-front::before { /* Left flap */
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--blush-light) 50%, transparent 50.1%);
+            box-shadow: 2px -2px 10px rgba(0,0,0,0.02);
+        }
+        .envelope-front::after { /* Right flap */
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(-135deg, var(--blush-light) 50%, transparent 50.1%);
+            box-shadow: -2px -2px 10px rgba(0,0,0,0.02);
+        }
+        .envelope-bottom {
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 100%; z-index: 4; pointer-events: none;
+            background: linear-gradient(0deg, var(--blush) 50%, transparent 50.1%);
+            clip-path: polygon(0 100%, 50% 45%, 100% 100%);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Top Flap (The part that opens) */
+        .envelope-flap {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: 5;
+            background: var(--blush-deep);
+            clip-path: polygon(0 0, 100% 0, 50% 55%);
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.3s;
+            display: flex; align-items: flex-end; justify-content: center;
+        }
+        .envelope-flap::after { /* Texture */
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+        }
+
+        /* Wax Seal */
+        .wax-seal {
+            position: absolute; bottom: 42%; left: 50%; transform: translate(-50%, 50%);
+            width: 50px; height: 50px;
+            background: radial-gradient(circle, #D4AF37 0%, #B8860B 100%);
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.5);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); color: var(--white); font-size: 1.2rem;
+            transition: opacity 0.3s ease; z-index: 6;
+        }
+        .wax-seal::after {
+            content: ''; position: absolute; inset: 4px;
+            border: 1px solid rgba(255,255,255,0.4); border-radius: 50%;
+        }
+
+        /* Animation States for Envelope */
+        #envelopeGate.animating .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1; /* Moves behind the card once opened */
+        }
+        #envelopeGate.animating .wax-seal { opacity: 0; }
+        #envelopeGate.animating .envelope-card {
+            transform: translateY(-80px);
+            z-index: 5;
+        }
+
+        .gate__tap-text {
+            margin-top: 40px;
+            font-family: var(--font-body); font-weight: 300;
+            color: var(--gray); font-size: 0.95rem;
+            animation: pulseText 2s infinite;
+        }
+        @keyframes pulseText { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* ============================================================
+           STORYBOOK CONTENT
+           ============================================================ */
+        .main-content {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            perspective: 1500px; z-index: 2;
+            display: none; /* hidden until envelope opened */
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--blush-light) 50%, #f4ecef 100%);
+        }
+        .page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transform-origin: left center;
+            transition: transform 1.4s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.8s ease;
+            backface-visibility: hidden;
+            opacity: 0; pointer-events: none;
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--blush-light) 50%, #f4ecef 100%);
+        }
+        .page::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at top right, rgba(235, 213, 213, 0.4), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(212, 230, 219, 0.4), transparent 40%);
+            z-index: -1;
+        }
+        .page.active {
+            opacity: 1; pointer-events: auto; transform: rotateY(0deg); z-index: 10;
+        }
+        .page.flipped {
+            transform: rotateY(-180deg); opacity: 0; pointer-events: none; z-index: 1;
+        }
+        .page.upcoming {
+            transform: rotateY(0deg); opacity: 0; z-index: 1;
+        }
+        .page-content {
+            width: 100%; max-width: 720px; padding: 0 24px; text-align: center;
+        }
+        
+        .reveal { opacity: 1; transform: none; transition: none; } /* Scroll reveal disabled */
+
+        /* Dividers */
+        .divider {
+            display: flex; align-items: center; justify-content: center; gap: 15px; margin: 20px 0;
+        }
+        .divider__line {
+            width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--blush-deep), transparent);
+        }
+        .divider__leaf { color: var(--sage); font-size: 1.2rem; }
+
+        /* ============================================================
+           TYPOGRAPHY & SECTIONS
+           ============================================================ */
+        .heading-sub {
+            font-family: var(--font-body); font-weight: 400; font-size: 0.8rem;
+            letter-spacing: 5px; text-transform: uppercase; color: var(--gray); margin-bottom: 20px;
+        }
+        .heading-main {
+            font-family: var(--font-display); font-size: 2.2rem; color: var(--dark); margin-bottom: 30px;
+        }
+
+        /* SECTION: Couple */
+        .couple__names {
+            font-family: var(--font-script); font-size: clamp(3.5rem, 10vw, 6rem);
+            color: var(--dark); line-height: 1.2; margin-bottom: 10px;
+        }
+        .couple__ampersand {
+            font-family: var(--font-script); font-size: clamp(2rem, 6vw, 3rem);
+            color: var(--blush-deep); display: block;
+        }
+        .couple__photos-container {
+            position: relative; display: flex; gap: 20px; justify-content: center; align-items: center; margin: 40px auto; height: 260px;
+        }
+        .couple__photo-wrapper {
+            position: relative; width: 180px; height: 180px;
+            border-radius: 50%; padding: 6px;
+            background: linear-gradient(135deg, var(--blush), var(--sage-light));
+            box-shadow: 0 10px 40px rgba(212, 154, 154, 0.3);
+            transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2.5s ease;
+        }
+        @media (min-width: 480px) {
+            .couple__photo-wrapper { width: 220px; height: 220px; padding: 8px; }
+        }
+        .couple__photo-inner {
+            position: relative; width: 100%; height: 100%; border-radius: 50%;
+            background: var(--white); border: 4px solid var(--white);
+            overflow: hidden;
+        }
+        .couple__photo-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; border-radius: 50%;
+        }
+        .couple__photo-final {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; object-position: top center; border-radius: 50%;
+            opacity: 0; z-index: 2; transition: opacity 2.5s ease-in-out;
+        }
+        .couple__photo-final.visible { opacity: 1; }
+        .fade-out { opacity: 0 !important; }
+        
+        .sketch-pencil {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
+            transition: opacity 0.5s ease, left 0.05s linear, top 0.05s linear;
+            transform: translate(-10px, -20px); /* Adjust to align pencil tip */
+        }
+        
+        /* Merging & Final Illustration CSS */
+        .final-illustration-wrapper {
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0; pointer-events: none; z-index: 10;
+        }
+        .final-illustration-wrapper.visible {
+            opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto;
+        }
+        .merge-left { transform: translateX(100px) scale(0.9); opacity: 0; }
+        .merge-right { transform: translateX(-100px) scale(0.9); opacity: 0; }
+        @media (min-width: 480px) {
+            .merge-left { transform: translateX(120px) scale(0.9); opacity: 0; }
+            .merge-right { transform: translateX(-120px) scale(0.9); opacity: 0; }
+        }
+
+        /* SECTION: Event Details (Glassmorphism) */
+        .event__card {
+            width: 100%; max-width: 440px; padding: 40px 30px; text-align: left;
+        }
+        .event__item {
+            display: flex; align-items: flex-start; gap: 20px; margin-bottom: 30px;
+        }
+        .event__item:last-child { margin-bottom: 0; }
+        .event__icon {
+            font-size: 1.5rem; flex-shrink: 0; width: 45px; height: 45px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.7); border-radius: 50%; color: var(--blush-deep);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .event__label {
+            font-size: 0.7rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--gray); margin-bottom: 5px;
+        }
+        .event__value {
+            font-family: var(--font-display); font-size: 1.2rem; color: var(--dark); line-height: 1.4;
+        }
+        
+        /* Add to Calendar Button */
+        .calendar-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-top: 25px; padding: 12px 24px;
+            background: transparent; border: 1px solid var(--blush-deep); border-radius: 50px;
+            color: var(--blush-deep); font-size: 0.85rem; font-weight: 500; letter-spacing: 1px;
+            text-decoration: none; text-transform: uppercase; transition: all 0.3s ease;
+        }
+        .calendar-btn:hover {
+            background: var(--blush-deep); color: var(--white);
+        }
+
+        /* SECTION: Family */
+        .family__grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%;
+        }
+        .family__side-label {
+            font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--blush-deep); margin-bottom: 15px; border-bottom: 1px solid var(--blush); padding-bottom: 8px;
+        }
+        .family__parent {
+            font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 4px;
+        }
+        .family__relation {
+            font-size: 0.8rem; color: var(--gray); font-weight: 300; margin-bottom: 15px;
+        }
+
+        /* SECTION: Countdown (Glassmorphism) */
+        .countdown__grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; width: 100%; max-width: 440px;
+        }
+        .countdown__box {
+            padding: 20px 10px;
+        }
+        .countdown__number {
+            font-family: var(--font-display); font-size: clamp(1.8rem, 6vw, 2.5rem); color: var(--blush-deep);
+        }
+        .countdown__label {
+            font-size: 0.6rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); margin-top: 5px;
+        }
+
+        /* RSVP & Buttons */
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 16px 36px; border-radius: 50px;
+            background: var(--dark); color: var(--white);
+            text-decoration: none; font-size: 0.9rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+            transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(43, 38, 38, 0.15);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px); box-shadow: 0 15px 25px rgba(43, 38, 38, 0.25); background: #1a1717;
+        }
+        
+        .rsvp__text { font-size: 1.1rem; color: var(--gray); line-height: 1.6; margin-bottom: 30px; }
+
+        /* Footer */
+        .footer { padding: 40px 0; border-top: 1px solid var(--blush); }
+        .footer__sanskrit { font-family: var(--font-hindi); font-size: 1.2rem; color: var(--sage); margin-bottom: 10px; }
+        .footer__en { font-style: italic; font-size: 0.9rem; color: var(--gray); }
+
+        /* Controls */
+        .music-toggle, .scroll-top {
+            position: fixed; z-index: 100; width: 46px; height: 46px; border-radius: 50%;
+            background: var(--white); border: 1px solid var(--blush); color: var(--blush-deep);
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; opacity: 0; pointer-events: none;
+        }
+        .music-toggle { bottom: 20px; right: 20px; }
+        .scroll-top { bottom: 20px; left: 20px; }
+        .music-toggle.active, .scroll-top.visible { opacity: 1; pointer-events: auto; }
+        .music-toggle:hover, .scroll-top:hover { transform: scale(1.1); }
+        .music-toggle.playing { animation: pulseMusic 2s infinite; }
+        @keyframes pulseMusic { 0%, 100% { box-shadow: 0 0 0 0 rgba(212, 154, 154, 0.4); } 50% { box-shadow: 0 0 0 12px rgba(212, 154, 154, 0); } }
+
+        @media (max-width: 480px) {
+            .section { padding: 60px 0; }
+            .family__grid { grid-template-columns: 1fr; gap: 30px; }
+            .countdown__grid { gap: 10px; }
+            .event__card { padding: 30px 20px; }
+            .envelope-wrapper { width: 280px; height: 190px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botanical SVGs -->
+    <div class="botanical-bg botanical-bg--1">
+        <svg viewBox="0 0 100 100"><path d="M50 100 C 50 50, 0 50, 0 0 C 30 20, 50 50, 50 100" /><path d="M50 80 C 70 50, 100 30, 100 10 C 80 40, 50 70, 50 80" /></svg>
+    </div>
+    <div class="botanical-bg botanical-bg--2">
+        <svg viewBox="0 0 100 100"><path d="M20 100 C 30 60, 10 30, 0 10 C 40 30, 60 70, 20 100" /><path d="M30 70 C 60 50, 90 20, 100 0 C 70 40, 40 60, 30 70" /></svg>
+    </div>
+
+    <!-- Falling Petals Canvas -->
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- ================================================================
+         ENVELOPE GATE SCREEN
+         ================================================================ -->
+    <div id="envelopeGate" role="button" tabindex="0" aria-label="Tap to open invitation">
+        
+        <div class="envelope-wrapper" id="envelopeWrapper">
+            <div class="envelope">
+                <div class="envelope-bottom"></div>
+                <div class="envelope-front"></div>
+                
+                <div class="envelope-card">
+                    <!-- CUSTOMIZE: Names on the envelope card -->
+                    <div class="envelope-card-names">Anand & Sneha</div>
+                </div>
+
+                <div class="envelope-flap"></div>
+                <div class="wax-seal">R&P</div>
+            </div>
+        </div>
+        
+        <div class="gate__tap-text">Tap to open</div>
+    </div>
+
+    <!-- ================================================================
+         MAIN CONTENT
+         ================================================================ -->
+    <div class="main-content" id="bookContainer">
+        
+        <!-- Page 1: Welcome -->
+        <div class="page" id="page1">
+            <div class="page-content">
+                <div class="heading-sub">With the blessing of Radha Krishna</div>
+                <div class="footer__sanskrit" style="font-size:2.5rem; margin-top:20px;">॥ श्री गणेशाय नमः ॥</div>
+            </div>
+        </div>
+
+        <!-- Page 2: Couple -->
+        <div class="page" id="page2">
+            <div class="page-content">
+                <div class="heading-sub" style="margin-bottom: 20px;">We are getting engaged</div>
+                <div class="couple__names" style="margin-bottom: 20px;">
+                    Anand
+                    <span class="couple__ampersand">&</span>
+                    Sneha
+                </div>
+                
+                <div class="couple__photos-container" id="sketchContainer" style="margin-top: 10px;">
+                    <!-- Final merged illustration (Hidden initially) -->
+                    <div class="couple__photo-wrapper final-illustration-wrapper" id="finalTogetherWrapper">
+                        <div class="couple__photo-inner">
+                            <img class="couple__photo-final visible" src="assets/engagement_kids_illustration_1789398233565.jpg" alt="Together" />
+                        </div>
+                    </div>
+                    
+                    <!-- Anand (Left) -->
+                    <div class="couple__photo-wrapper" id="wrapperAnand">
+                        <div class="couple__photo-inner">
+                            <canvas id="sketchCanvasAnand" class="couple__photo-canvas" width="204" height="204"></canvas>
+                            <img id="origPhotoAnand" class="couple__photo-final visible" src="assets/anand.jpeg" alt="Anand" />
+                            <img id="animatedPhotoAnand" class="couple__photo-final" src="assets/anand_animated.jpeg" alt="Anand Animated" />
+                            <div id="pencilAnand" class="sketch-pencil">✏️</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sneha (Right) -->
+                    <div class="couple__photo-wrapper" id="wrapperSneha">
+                        <div class="couple__photo-inner">
+                            <canvas id="sketchCanvasSneha" class="couple__photo-canvas" width="204" height="204"></canvas>
+                            <img id="origPhotoSneha" class="couple__photo-final visible" src="assets/sneha.jpeg" alt="Sneha" />
+                            <img id="animatedPhotoSneha" class="couple__photo-final" src="assets/sneha_animated.jpeg" alt="Sneha Animated" />
+                            <div id="pencilSneha" class="sketch-pencil">✏️</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Event Details -->
+        <div class="page" id="page3">
+            <div class="page-content">
+                <h2 class="heading-main" style="margin-bottom:30px;">When & Where</h2>
+                <div class="glass-card event__card" style="margin: 0 auto;">
+                    <div class="event__item">
+                        <div class="event__icon">📅</div>
+                        <div>
+                            <div class="event__label">Date</div>
+                            <div class="event__value">Saturday, 21st November 2026</div>
+                        </div>
+                    </div>
+                    <div class="event__item">
+                        <div class="event__icon">🕛</div>
+                        <div>
+                            <div class="event__label">Time</div>
+                            <div class="event__value">12:00 PM (Noon)</div>
+                        </div>
+                    </div>
+                    <div class="event__item">
+                        <div class="event__icon">📍</div>
+                        <div>
+                            <div class="event__label">Venue</div>
+                            <div class="event__value">
+                                Legardenia<br/>
+                                Patna, Bihar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 4: Family -->
+        <div class="page" id="page4">
+            <div class="page-content">
+                <div class="heading-sub" style="margin-bottom:30px;">With Love From</div>
+                <div class="family__grid">
+                    <div>
+                        <div class="family__side-label">Groom's Family</div>
+                        <div class="family__parent">Mr. Birendera Kumar</div>
+                        <div class="family__relation">Father of the Groom</div>
+                        <div class="family__parent">Mrs. Prabhawati Devi</div>
+                        <div class="family__relation">Mother of the Groom</div>
+                    </div>
+                    <div>
+                        <div class="family__side-label">Bride's Family</div>
+                        <div class="family__parent">Mr. Balmiki Prasad Singh</div>
+                        <div class="family__relation">Father of the Bride</div>
+                        <div class="family__parent">Mrs. Sanju Devi</div>
+                        <div class="family__relation">Mother of the Bride</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 5: RSVP & Countdown -->
+        <div class="page" id="page5">
+            <div class="page-content">
+                <h2 class="heading-main" style="margin-bottom:20px;">Join Us</h2>
+                <p class="rsvp__text" style="margin-bottom: 20px;">We would be delighted to have you<br/>grace us with your presence.</p>
+                <div class="countdown__grid" id="countdownGrid" style="margin: 0 auto 30px;">
+                    <div class="glass-card countdown__box"><div class="countdown__number" id="cdDays">00</div><div class="countdown__label">Days</div></div>
+                    <div class="glass-card countdown__box"><div class="countdown__number" id="cdHours">00</div><div class="countdown__label">Hours</div></div>
+                    <div class="glass-card countdown__box"><div class="countdown__number" id="cdMins">00</div><div class="countdown__label">Minutes</div></div>
+                    <div class="glass-card countdown__box"><div class="countdown__number" id="cdSecs">00</div><div class="countdown__label">Seconds</div></div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                    <a href="https://wa.me/91[PHONE_NUMBER]?text=We%20are%20delighted%20to%20attend%20the%20engagement%20ceremony!%20🎉" target="_blank" rel="noopener" class="btn-primary" style="background: #25D366;">
+                        💬 RSVP on WhatsApp
+                    </a>
+                    <a href="https://maps.app.goo.gl/f7MHtxTWmjsN7N7SA" target="_blank" rel="noopener" class="btn-primary">
+                        📍 Open in Google Maps
+                    </a>
+                </div>
+                
+                <div class="footer__sanskrit" style="margin-top: 40px;">शुभ मंगल सावधान</div>
+                <div class="footer__en">"May this union be blessed and auspicious"</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <button class="music-toggle" id="musicToggle" aria-label="Toggle music">🔊</button>
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+    <!-- CUSTOMIZE: Add your music -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/shagna.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script>
+    (function () {
+        'use strict';
+
+        // === Storybook Controller ===
+        class Storybook {
+            constructor() {
+                this.pages = document.querySelectorAll('.page');
+                this.currentIndex = 0;
+                
+                this.pages.forEach((page, i) => {
+                    if (i === 0) page.classList.add('active');
+                    else page.classList.add('upcoming');
+                });
+            }
+
+            nextPage() {
+                if (this.currentIndex >= this.pages.length - 1) return;
+                
+                const currentPage = this.pages[this.currentIndex];
+                const nextPage = this.pages[this.currentIndex + 1];
+                
+                currentPage.classList.remove('active');
+                currentPage.classList.add('flipped');
+                
+                nextPage.classList.remove('upcoming');
+                nextPage.classList.add('active');
+                
+                this.currentIndex++;
+                this.startPageTimeline(this.currentIndex);
+            }
+
+            startPageTimeline(index) {
+                if (index === 0) {
+                    setTimeout(() => this.nextPage(), 5000); // 5s for Welcome
+                } else if (index === 1) {
+                    setTimeout(() => {
+                        startSketchAnimationSequence().then(() => {
+                            setTimeout(() => this.nextPage(), 4000); // Wait 4s after animation finishes
+                        });
+                    }, 2000);
+                } else if (index === 2) {
+                    setTimeout(() => this.nextPage(), 7000); // 7s for Event Details
+                } else if (index === 3) {
+                    setTimeout(() => this.nextPage(), 7000); // 7s for Family
+                }
+            }
+        }
+
+        let storybook;
+
+        // === Envelope Gate Animation ===
+        const gateScreen = document.getElementById('envelopeGate');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        let isMusicPlaying = false;
+
+        function openEnvelope(isAuto = false) {
+            if (gateScreen.classList.contains('animating')) return;
+            
+            gateScreen.classList.add('animating');
+            
+            if (bgMusic) {
+                bgMusic.volume = 0.4;
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    musicToggle.classList.add('playing');
+                    musicToggle.textContent = '🔊';
+                }).catch(() => {
+                    isMusicPlaying = false;
+                    musicToggle.textContent = '🔇';
+                });
+            }
+
+            setTimeout(() => {
+                gateScreen.classList.add('opened');
+                musicToggle.classList.add('active');
+                document.getElementById('bookContainer').style.display = 'block';
+                startPetals();
+                
+                // Start Storybook Timeline!
+                storybook = new Storybook();
+                storybook.startPageTimeline(0);
+                
+            }, 3000);
+        }
+
+
+
+        gateScreen.addEventListener('click', () => openEnvelope(false));
+        gateScreen.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') openEnvelope(false);
+        });
+
+        // === Music toggle ===
+        musicToggle.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicToggle.textContent = '🔇';
+                musicToggle.classList.remove('playing');
+            } else {
+                bgMusic.play().then(() => {
+                    musicToggle.textContent = '🔊';
+                    musicToggle.classList.add('playing');
+                }).catch(() => {});
+            }
+            isMusicPlaying = !isMusicPlaying;
+        });
+
+        // === Countdown ===
+        const EVENT_DATE = new Date(2026, 10, 21, 12, 0, 0);
+        function updateCountdown() {
+            const diff = EVENT_DATE.getTime() - Date.now();
+            if (diff <= 0) {
+                const grid = document.getElementById('countdownGrid');
+                if (grid) grid.innerHTML = '<div style="grid-column:1/-1; font-family:var(--font-script); font-size:2rem; color:var(--blush-deep);">🎉 The celebrations have begun! 🎉</div>';
+                return;
+            }
+            const pad = n => String(n).padStart(2, '0');
+            const cdDays = document.getElementById('cdDays');
+            if (cdDays) {
+                cdDays.textContent = pad(Math.floor(diff / 86400000));
+                document.getElementById('cdHours').textContent = pad(Math.floor((diff % 86400000) / 3600000));
+                document.getElementById('cdMins').textContent = pad(Math.floor((diff % 3600000) / 60000));
+                document.getElementById('cdSecs').textContent = pad(Math.floor((diff % 60000) / 1000));
+            }
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // === Falling Petals Canvas ===
+        const canvas = document.getElementById('petalCanvas');
+        const ctx = canvas.getContext('2d');
+        let petals = [];
+        let animating = false;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Petal {
+            constructor() { this.reset(true); }
+            reset(initial = false) {
+                this.x = Math.random() * canvas.width;
+                this.y = initial ? Math.random() * canvas.height : -20;
+                this.size = 8 + Math.random() * 12;
+                this.speedY = 0.3 + Math.random() * 0.7;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = (Math.random() - 0.5) * 1.5;
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = 0.01 + Math.random() * 0.02;
+                this.opacity = 0.4 + Math.random() * 0.4;
+                
+                const colors = [
+                    'rgba(245, 211, 211, OPACITY)',
+                    'rgba(255, 255, 255, OPACITY)',
+                    'rgba(216, 195, 216, OPACITY)'
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.wobble += this.wobbleSpeed;
+                this.x += this.speedX + Math.sin(this.wobble) * 0.5;
+                this.y += this.speedY;
+                this.rotation += this.rotSpeed;
+                if (this.y > canvas.height + 20) this.reset();
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-this.size, this.size/2, -this.size/2, this.size, 0, this.size);
+                ctx.bezierCurveTo(this.size/2, this.size, this.size, this.size/2, 0, 0);
+                
+                ctx.fillStyle = this.color.replace('OPACITY', this.opacity);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function startPetals() {
+            if (animating) return;
+            animating = true;
+            const count = window.innerWidth < 480 ? 25 : 45;
+            for (let i = 0; i < count; i++) petals.push(new Petal());
+            animatePetals();
+        }
+
+        function animatePetals() {
+            if (!animating) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(p => { p.update(); p.draw(ctx); });
+            requestAnimationFrame(animatePetals);
+        }
+
+        // === Sketch & Merge Animation ===
+        function startSketchAnimationSequence() {
+            return new Promise((resolveSequence) => {
+                const configs = [
+                    {
+                        canvasId: 'sketchCanvasAnand',
+                        origPhotoId: 'origPhotoAnand',
+                        animatedPhotoId: 'animatedPhotoAnand',
+                        pencilId: 'pencilAnand',
+                        sourceUrl: 'assets/anand.jpeg',
+                        wrapperId: 'wrapperAnand',
+                        mergeClass: 'merge-left'
+                    },
+                    {
+                        canvasId: 'sketchCanvasSneha',
+                        origPhotoId: 'origPhotoSneha',
+                        animatedPhotoId: 'animatedPhotoSneha',
+                        pencilId: 'pencilSneha',
+                        sourceUrl: 'assets/sneha.jpeg',
+                        wrapperId: 'wrapperSneha',
+                        mergeClass: 'merge-right'
+                    }
+                ];
+                
+                let loadedCount = 0;
+                const images = [];
+
+                configs.forEach((config, index) => {
+                    const img = new Image();
+                    img.src = config.sourceUrl;
+                    img.onload = () => {
+                        loadedCount++;
+                        if (loadedCount === configs.length) {
+                            runSequence();
+                        }
+                    };
+                    images[index] = { img, config };
+                });
+                
+                function runSequence() {
+                    Promise.all(images.map(item => startSketching(item.img, item.config)))
+                        .then(() => {
+                            images.forEach(item => {
+                                document.getElementById(item.config.animatedPhotoId).classList.add('visible');
+                            });
+                            
+                            setTimeout(() => {
+                                images.forEach(item => {
+                                    document.getElementById(item.config.wrapperId).classList.add(item.config.mergeClass);
+                                });
+                                
+                                // 3. Show final illustration shortly after merge begins
+                                setTimeout(() => {
+                                    const finalWrapper = document.getElementById('finalTogetherWrapper');
+                                    finalWrapper.classList.add('visible');
+                                    
+                                    // Sequence fully complete, resolve master promise
+                                    setTimeout(resolveSequence, 2000);
+                                }, 1500);
+                            }, 2500);
+                        });
+                }
+                
+                function startSketching(sourceImg, config) {
+                    return new Promise(resolve => {
+                        const canvas = document.getElementById(config.canvasId);
+                        const origPhoto = document.getElementById(config.origPhotoId);
+                        if (!canvas || !origPhoto) return resolve();
+                        
+                        const sCtx = canvas.getContext('2d', { willReadFrequently: true });
+                        const width = canvas.width;
+                        const height = canvas.height;
+                        
+                        const offscreen = document.createElement('canvas');
+                        offscreen.width = width;
+                        offscreen.height = height;
+                        const oCtx = offscreen.getContext('2d');
+                        
+                        oCtx.fillStyle = '#fff';
+                        oCtx.fillRect(0, 0, width, height);
+                        
+                        const scale = Math.max(width / sourceImg.width, height / sourceImg.height);
+                        const x = (width - sourceImg.width * scale) / 2;
+                        const y = (height - sourceImg.height * scale) / 2;
+                        oCtx.drawImage(sourceImg, x, y, sourceImg.width * scale, sourceImg.height * scale);
+                        
+                        const imgData = oCtx.getImageData(0, 0, width, height);
+                        const pixels = imgData.data;
+                        const edges = [];
+                        
+                        for (let py = 1; py < height - 1; py++) {
+                            for (let px = 1; px < width - 1; px++) {
+                                const i = (py * width + px) * 4;
+                                const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+                                const gray = r * 0.299 + g * 0.587 + b * 0.114;
+                                
+                                const rightI = (py * width + (px + 1)) * 4;
+                                const bottomI = ((py + 1) * width + px) * 4;
+                                
+                                const rightGray = pixels[rightI] * 0.299 + pixels[rightI+1] * 0.587 + pixels[rightI+2] * 0.114;
+                                const bottomGray = pixels[bottomI] * 0.299 + pixels[bottomI+1] * 0.587 + pixels[bottomI+2] * 0.114;
+                                
+                                const diff = Math.abs(gray - rightGray) + Math.abs(gray - bottomGray);
+                                
+                                if (diff > 25) { 
+                                    edges.push({ x: px, y: py, intensity: diff });
+                                }
+                            }
+                        }
+                        
+                        edges.sort(() => Math.random() - 0.5);
+                        
+                        sCtx.fillStyle = '#fff';
+                        sCtx.fillRect(0, 0, width, height);
+                        
+                        let i = 0;
+                        const batchSize = Math.max(5, Math.floor(edges.length / 250));
+                        const pencil = document.getElementById(config.pencilId);
+                        
+                        setTimeout(() => {
+                            origPhoto.classList.add('fade-out');
+                            if (pencil) pencil.style.opacity = '1';
+                        }, 800); // Start 800ms after function is called
+                        
+                        function drawFrame() {
+                            sCtx.fillStyle = 'rgba(40, 30, 30, 0.7)'; // Darker sketch
+                            for (let b = 0; b < batchSize && i < edges.length; b++, i++) {
+                                const p = edges[i];
+                                sCtx.beginPath();
+                                sCtx.arc(p.x, p.y, 1.2, 0, Math.PI * 2); // Thicker lines
+                                sCtx.fill();
+                                if (pencil && b === 0) {
+                                    pencil.style.left = (p.x / width * 100) + '%';
+                                    pencil.style.top = (p.y / height * 100) + '%';
+                                }
+                            }
+                            
+                            if (i < edges.length) {
+                                requestAnimationFrame(drawFrame);
+                            } else {
+                                setTimeout(() => {
+                                    if (pencil) pencil.style.opacity = '0';
+                                }, 500); // Pencil lingers for 0.5s before fading
+                                setTimeout(resolve, 1000); // Smoothly resolve faster to crossfade
+                            }
+                        }
+                        // Start drawing slightly after pencil fades in
+                        setTimeout(drawFrame, 900);
+                    });
+                }
+            });
+        }
+    })();
+    </script>
+</body>
+</html>
