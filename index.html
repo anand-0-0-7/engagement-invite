@@ -318,6 +318,16 @@
         .couple__photo-final.visible { opacity: 1; }
         .fade-out { opacity: 0 !important; }
         
+        .sketch-pencil {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            transform: translate(-10px, -20px); /* Adjust to align pencil tip */
+        }
+        
         /* Merging & Final Illustration CSS */
         .final-illustration-wrapper {
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.8);
@@ -482,7 +492,7 @@
         <!-- Page 1: Welcome -->
         <div class="page" id="page1">
             <div class="page-content">
-                <div class="heading-sub">With the blessings of the Almighty</div>
+                <div class="heading-sub">With the blessing of Radha Krishna</div>
                 <div class="footer__sanskrit" style="font-size:2.5rem; margin-top:20px;">॥ श्री गणेशाय नमः ॥</div>
             </div>
         </div>
@@ -511,6 +521,7 @@
                             <canvas id="sketchCanvasAnand" class="couple__photo-canvas" width="204" height="204"></canvas>
                             <img id="origPhotoAnand" class="couple__photo-final visible" src="assets/anand.jpeg" alt="Anand" />
                             <img id="animatedPhotoAnand" class="couple__photo-final" src="assets/anand_animated.jpeg" alt="Anand Animated" />
+                            <div id="pencilAnand" class="sketch-pencil">✏️</div>
                         </div>
                     </div>
                     
@@ -520,6 +531,7 @@
                             <canvas id="sketchCanvasSneha" class="couple__photo-canvas" width="204" height="204"></canvas>
                             <img id="origPhotoSneha" class="couple__photo-final visible" src="assets/sneha.jpeg" alt="Sneha" />
                             <img id="animatedPhotoSneha" class="couple__photo-final" src="assets/sneha_animated.jpeg" alt="Sneha Animated" />
+                            <div id="pencilSneha" class="sketch-pencil">✏️</div>
                         </div>
                     </div>
                 </div>
@@ -655,9 +667,11 @@
                 if (index === 0) {
                     setTimeout(() => this.nextPage(), 5000); // 5s for Welcome
                 } else if (index === 1) {
-                    startSketchAnimationSequence().then(() => {
-                        setTimeout(() => this.nextPage(), 4000); // Wait 4s after animation finishes
-                    });
+                    setTimeout(() => {
+                        startSketchAnimationSequence().then(() => {
+                            setTimeout(() => this.nextPage(), 4000); // Wait 4s after animation finishes
+                        });
+                    }, 2000);
                 } else if (index === 2) {
                     setTimeout(() => this.nextPage(), 7000); // 7s for Event Details
                 } else if (index === 3) {
@@ -827,6 +841,7 @@
                         canvasId: 'sketchCanvasAnand',
                         origPhotoId: 'origPhotoAnand',
                         animatedPhotoId: 'animatedPhotoAnand',
+                        pencilId: 'pencilAnand',
                         sourceUrl: 'assets/anand.jpeg',
                         wrapperId: 'wrapperAnand',
                         mergeClass: 'merge-left'
@@ -835,6 +850,7 @@
                         canvasId: 'sketchCanvasSneha',
                         origPhotoId: 'origPhotoSneha',
                         animatedPhotoId: 'animatedPhotoSneha',
+                        pencilId: 'pencilSneha',
                         sourceUrl: 'assets/sneha.jpeg',
                         wrapperId: 'wrapperSneha',
                         mergeClass: 'merge-right'
@@ -934,9 +950,11 @@
                         
                         let i = 0;
                         const batchSize = Math.max(8, Math.floor(edges.length / 200));
+                        const pencil = document.getElementById(config.pencilId);
                         
                         setTimeout(() => {
                             origPhoto.classList.add('fade-out');
+                            if (pencil) pencil.style.opacity = '1';
                         }, 100);
                         
                         function drawFrame() {
@@ -946,11 +964,16 @@
                                 sCtx.beginPath();
                                 sCtx.arc(p.x, p.y, 0.8, 0, Math.PI * 2);
                                 sCtx.fill();
+                                if (pencil && b === 0) {
+                                    pencil.style.left = (p.x / width * 100) + '%';
+                                    pencil.style.top = (p.y / height * 100) + '%';
+                                }
                             }
                             
                             if (i < edges.length) {
                                 requestAnimationFrame(drawFrame);
                             } else {
+                                if (pencil) pencil.style.opacity = '0';
                                 setTimeout(resolve, 800);
                             }
                         }
