@@ -48,13 +48,13 @@
         }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; overflow-x: hidden; }
+        html { scroll-behavior: smooth; overflow: hidden; }
 
         body {
             font-family: var(--font-body);
             background: linear-gradient(135deg, var(--off-white) 0%, var(--blush-light) 50%, #f4ecef 100%);
             color: var(--dark);
-            overflow-x: hidden;
+            overflow: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -221,29 +221,43 @@
         @keyframes pulseText { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
         /* ============================================================
-           MAIN CONTENT
+           STORYBOOK CONTENT
            ============================================================ */
         .main-content {
-            position: relative; z-index: 2;
-            max-width: 720px; margin: 0 auto; padding: 0 24px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            perspective: 1500px; z-index: 2;
+            display: none; /* hidden until envelope opened */
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--blush-light) 50%, #f4ecef 100%);
         }
-
-        .section {
-            min-height: 100vh;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 80px 0; text-align: center;
+        .page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transform-origin: left center;
+            transition: transform 1.4s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.8s ease;
+            backface-visibility: hidden;
+            opacity: 0; pointer-events: none;
+            background: linear-gradient(135deg, var(--off-white) 0%, var(--blush-light) 50%, #f4ecef 100%);
         }
-        .section--short { min-height: auto; padding: 60px 0; }
-
-        /* Scroll reveal */
-        .reveal {
-            opacity: 0; transform: translateY(40px);
-            transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1), transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+        .page::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at top right, rgba(235, 213, 213, 0.4), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(212, 230, 219, 0.4), transparent 40%);
+            z-index: -1;
         }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-delay-1 { transition-delay: 0.2s; }
-        .reveal-delay-2 { transition-delay: 0.4s; }
+        .page.active {
+            opacity: 1; pointer-events: auto; transform: rotateY(0deg); z-index: 10;
+        }
+        .page.flipped {
+            transform: rotateY(-180deg); opacity: 0; pointer-events: none; z-index: 1;
+        }
+        .page.upcoming {
+            transform: rotateY(0deg); opacity: 0; z-index: 1;
+        }
+        .page-content {
+            width: 100%; max-width: 720px; padding: 0 24px; text-align: center;
+        }
+        
+        .reveal { opacity: 1; transform: none; transition: none; } /* Scroll reveal disabled */
 
         /* Dividers */
         .divider {
@@ -463,28 +477,27 @@
     <!-- ================================================================
          MAIN CONTENT
          ================================================================ -->
-    <div class="main-content">
+    <div class="main-content" id="bookContainer">
+        
+        <!-- Page 1: Welcome -->
+        <div class="page" id="page1">
+            <div class="page-content">
+                <div class="heading-sub">With the blessings of the Almighty</div>
+                <div class="footer__sanskrit" style="font-size:2.5rem; margin-top:20px;">॥ श्री गणेशाय नमः ॥</div>
+            </div>
+        </div>
 
-        <!-- Welcome -->
-        <section class="section" id="welcome">
-            <div class="reveal"><div class="heading-sub">With the blessings of the Almighty</div></div>
-            <div class="reveal reveal-delay-1"><div class="footer__sanskrit" style="font-size:2rem; margin-bottom:0;">॥ श्री गणेशाय नमः ॥</div></div>
-        </section>
-
-        <!-- Couple -->
-        <section class="section couple" id="couple">
-            <div class="reveal"><div class="heading-sub">We are getting engaged</div></div>
-            <div class="reveal reveal-delay-1">
-                <!-- CUSTOMIZE: Couple Names -->
-                <div class="couple__names">
+        <!-- Page 2: Couple -->
+        <div class="page" id="page2">
+            <div class="page-content">
+                <div class="heading-sub" style="margin-bottom: 20px;">We are getting engaged</div>
+                <div class="couple__names" style="margin-bottom: 20px;">
                     Anand
                     <span class="couple__ampersand">&</span>
                     Sneha
                 </div>
-            </div>
-            <div class="reveal reveal-delay-2">
-                <div class="couple__photos-container" id="sketchContainer">
-                    
+                
+                <div class="couple__photos-container" id="sketchContainer" style="margin-top: 10px;">
                     <!-- Final merged illustration (Hidden initially) -->
                     <div class="couple__photo-wrapper final-illustration-wrapper" id="finalTogetherWrapper">
                         <div class="couple__photo-inner">
@@ -509,23 +522,19 @@
                             <img id="animatedPhotoSneha" class="couple__photo-final" src="assets/sneha_animated.jpeg" alt="Sneha Animated" />
                         </div>
                     </div>
-                    
                 </div>
             </div>
-        </section>
+        </div>
 
-        <div class="divider"><div class="divider__line"></div><div class="divider__leaf">🌿</div><div class="divider__line"></div></div>
-
-        <!-- Event Details (Glassmorphism) -->
-        <section class="section" id="event">
-            <div class="reveal"><h2 class="heading-main">When & Where</h2></div>
-            <div class="reveal reveal-delay-1">
-                <div class="glass-card event__card">
+        <!-- Page 3: Event Details -->
+        <div class="page" id="page3">
+            <div class="page-content">
+                <h2 class="heading-main" style="margin-bottom:30px;">When & Where</h2>
+                <div class="glass-card event__card" style="margin: 0 auto;">
                     <div class="event__item">
                         <div class="event__icon">📅</div>
                         <div>
                             <div class="event__label">Date</div>
-                            <!-- CUSTOMIZE -->
                             <div class="event__value">Sunday, 15th November 2026</div>
                         </div>
                     </div>
@@ -533,7 +542,6 @@
                         <div class="event__icon">🕐</div>
                         <div>
                             <div class="event__label">Time</div>
-                            <!-- CUSTOMIZE -->
                             <div class="event__value">6:00 PM onwards</div>
                         </div>
                     </div>
@@ -541,7 +549,6 @@
                         <div class="event__icon">📍</div>
                         <div>
                             <div class="event__label">Venue</div>
-                            <!-- CUSTOMIZE -->
                             <div class="event__value">
                                 The Grand Palace Banquet Hall<br/>
                                 123, MG Road, Sector 18<br/>
@@ -549,25 +556,15 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- CUSTOMIZE: Add to Calendar Link. Generate one at https://calndr.link/ or manually construct it -->
-                    <div style="text-align: center;">
-                        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Anand+%26+Sneha+Engagement&details=Join+us+for+our+ring+ceremony!&location=The+Grand+Palace+Banquet+Hall,+Noida&dates=20261115T123000Z/20261115T183000Z" target="_blank" rel="noopener" class="calendar-btn">
-                            📅 Add to Google Calendar
-                        </a>
-                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <div class="divider"><div class="divider__line"></div><div class="divider__leaf">🌿</div><div class="divider__line"></div></div>
-
-        <!-- Family Names -->
-        <section class="section section--short family" id="family">
-            <div class="reveal"><div class="heading-sub">With Love From</div></div>
-            <div class="reveal reveal-delay-1">
+        <!-- Page 4: Family -->
+        <div class="page" id="page4">
+            <div class="page-content">
+                <div class="heading-sub" style="margin-bottom:30px;">With Love From</div>
                 <div class="family__grid">
-                    <!-- CUSTOMIZE -->
                     <div>
                         <div class="family__side-label">Groom's Family</div>
                         <div class="family__parent">Mr. Birendera Kumar</div>
@@ -575,7 +572,6 @@
                         <div class="family__parent">Mrs. Prabhawati Devi</div>
                         <div class="family__relation">Mother of the Groom</div>
                     </div>
-                    <!-- CUSTOMIZE -->
                     <div>
                         <div class="family__side-label">Bride's Family</div>
                         <div class="family__parent">Mr. Balmiki Prasad Singh</div>
@@ -585,49 +581,33 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <div class="divider"><div class="divider__line"></div><div class="divider__leaf">🌿</div><div class="divider__line"></div></div>
-
-        <!-- Countdown (Glassmorphism) -->
-        <section class="section countdown" id="countdown">
-            <div class="reveal"><h2 class="heading-main">The Countdown</h2></div>
-            <div class="reveal reveal-delay-1">
-                <div class="countdown__grid" id="countdownGrid">
+        <!-- Page 5: RSVP & Countdown -->
+        <div class="page" id="page5">
+            <div class="page-content">
+                <h2 class="heading-main" style="margin-bottom:20px;">Join Us</h2>
+                <p class="rsvp__text" style="margin-bottom: 20px;">We would be delighted to have you<br/>grace us with your presence.</p>
+                <div class="countdown__grid" id="countdownGrid" style="margin: 0 auto 30px;">
                     <div class="glass-card countdown__box"><div class="countdown__number" id="cdDays">00</div><div class="countdown__label">Days</div></div>
                     <div class="glass-card countdown__box"><div class="countdown__number" id="cdHours">00</div><div class="countdown__label">Hours</div></div>
                     <div class="glass-card countdown__box"><div class="countdown__number" id="cdMins">00</div><div class="countdown__label">Minutes</div></div>
                     <div class="glass-card countdown__box"><div class="countdown__number" id="cdSecs">00</div><div class="countdown__label">Seconds</div></div>
                 </div>
-            </div>
-        </section>
-
-        <!-- RSVP & Map Buttons -->
-        <section class="section section--short" id="rsvp">
-            <div class="reveal"><h2 class="heading-main">Join Us</h2></div>
-            <div class="reveal reveal-delay-1">
-                <p class="rsvp__text">We would be delighted to have you<br/>grace us with your presence.</p>
-            </div>
-            <div class="reveal reveal-delay-2" style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
-                <!-- CUSTOMIZE: WhatsApp RSVP -->
-                <a href="https://wa.me/91[PHONE_NUMBER]?text=We%20are%20delighted%20to%20attend%20the%20engagement%20ceremony!%20🎉" target="_blank" rel="noopener" class="btn-primary" style="background: #25D366;">
-                    💬 RSVP on WhatsApp
-                </a>
                 
-                <!-- CUSTOMIZE: Maps Link -->
-                <a href="https://maps.google.com/?q=[VENUE_LAT],[VENUE_LNG]" target="_blank" rel="noopener" class="btn-primary">
-                    📍 Open in Google Maps
-                </a>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="reveal">
-                <div class="footer__sanskrit">शुभ मंगल सावधान</div>
+                <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                    <a href="https://wa.me/91[PHONE_NUMBER]?text=We%20are%20delighted%20to%20attend%20the%20engagement%20ceremony!%20🎉" target="_blank" rel="noopener" class="btn-primary" style="background: #25D366;">
+                        💬 RSVP on WhatsApp
+                    </a>
+                    <a href="https://maps.google.com/?q=[VENUE_LAT],[VENUE_LNG]" target="_blank" rel="noopener" class="btn-primary">
+                        📍 Open in Google Maps
+                    </a>
+                </div>
+                
+                <div class="footer__sanskrit" style="margin-top: 40px;">शुभ मंगल सावधान</div>
                 <div class="footer__en">"May this union be blessed and auspicious"</div>
             </div>
-        </footer>
+        </div>
     </div>
 
     <!-- Controls -->
@@ -812,155 +792,147 @@
         }
 
         // === Sketch & Merge Animation ===
-        function initSketchAnimation() {
-            const configs = [
-                {
-                    canvasId: 'sketchCanvasAnand',
-                    origPhotoId: 'origPhotoAnand',
-                    animatedPhotoId: 'animatedPhotoAnand',
-                    sourceUrl: 'assets/anand.jpeg',
-                    wrapperId: 'wrapperAnand',
-                    mergeClass: 'merge-left'
-                },
-                {
-                    canvasId: 'sketchCanvasSneha',
-                    origPhotoId: 'origPhotoSneha',
-                    animatedPhotoId: 'animatedPhotoSneha',
-                    sourceUrl: 'assets/sneha.jpeg',
-                    wrapperId: 'wrapperSneha',
-                    mergeClass: 'merge-right'
-                }
-            ];
-            
-            let hasAnimated = false;
-            let loadedCount = 0;
-            const images = [];
-
-            // Preload images
-            configs.forEach((config, index) => {
-                const img = new Image();
-                img.src = config.sourceUrl;
-                img.onload = () => {
-                    loadedCount++;
-                    if (loadedCount === configs.length) {
-                        setupObserver();
+        function startSketchAnimationSequence() {
+            return new Promise((resolveSequence) => {
+                const configs = [
+                    {
+                        canvasId: 'sketchCanvasAnand',
+                        origPhotoId: 'origPhotoAnand',
+                        animatedPhotoId: 'animatedPhotoAnand',
+                        sourceUrl: 'assets/anand.jpeg',
+                        wrapperId: 'wrapperAnand',
+                        mergeClass: 'merge-left'
+                    },
+                    {
+                        canvasId: 'sketchCanvasSneha',
+                        origPhotoId: 'origPhotoSneha',
+                        animatedPhotoId: 'animatedPhotoSneha',
+                        sourceUrl: 'assets/sneha.jpeg',
+                        wrapperId: 'wrapperSneha',
+                        mergeClass: 'merge-right'
                     }
-                };
-                images[index] = { img, config };
-            });
-            
-            function setupObserver() {
-                const observer = new IntersectionObserver((entries) => {
-                    if (entries[0].isIntersecting && !hasAnimated) {
-                        hasAnimated = true;
-                        
-                        // Execute sketch animations concurrently and wait for them
-                        Promise.all(images.map(item => startSketching(item.img, item.config)))
-                            .then(() => {
-                                // 1. Fade IN animated photos
+                ];
+                
+                let loadedCount = 0;
+                const images = [];
+
+                configs.forEach((config, index) => {
+                    const img = new Image();
+                    img.src = config.sourceUrl;
+                    img.onload = () => {
+                        loadedCount++;
+                        if (loadedCount === configs.length) {
+                            runSequence();
+                        }
+                    };
+                    images[index] = { img, config };
+                });
+                
+                function runSequence() {
+                    Promise.all(images.map(item => startSketching(item.img, item.config)))
+                        .then(() => {
+                            // 1. Fade IN animated photos
+                            images.forEach(item => {
+                                document.getElementById(item.config.animatedPhotoId).classList.add('visible');
+                            });
+                            
+                            // 2. Wait a bit, then start merge animation
+                            setTimeout(() => {
                                 images.forEach(item => {
-                                    document.getElementById(item.config.animatedPhotoId).classList.add('visible');
+                                    document.getElementById(item.config.wrapperId).classList.add(item.config.mergeClass);
                                 });
                                 
-                                // 2. Wait a bit, then start merge animation
+                                // 3. Show final illustration shortly after merge begins
                                 setTimeout(() => {
-                                    images.forEach(item => {
-                                        document.getElementById(item.config.wrapperId).classList.add(item.config.mergeClass);
-                                    });
+                                    const finalWrapper = document.getElementById('finalTogetherWrapper');
+                                    finalWrapper.classList.add('visible');
                                     
-                                    // 3. Show final illustration shortly after merge begins
-                                    setTimeout(() => {
-                                        const finalWrapper = document.getElementById('finalTogetherWrapper');
-                                        finalWrapper.classList.add('visible');
-                                    }, 800);
-                                }, 1500);
-                            });
-                    }
-                }, { threshold: 0.5 });
-                const container = document.getElementById('sketchContainer');
-                if (container) observer.observe(container);
-            }
-            
-            function startSketching(sourceImg, config) {
-                return new Promise(resolve => {
-                    const canvas = document.getElementById(config.canvasId);
-                    const origPhoto = document.getElementById(config.origPhotoId);
-                    if (!canvas || !origPhoto) return resolve();
-                    
-                    const sCtx = canvas.getContext('2d', { willReadFrequently: true });
-                    const width = canvas.width;
-                    const height = canvas.height;
-                    
-                    const offscreen = document.createElement('canvas');
-                    offscreen.width = width;
-                    offscreen.height = height;
-                    const oCtx = offscreen.getContext('2d');
-                    
-                    oCtx.fillStyle = '#fff';
-                    oCtx.fillRect(0, 0, width, height);
-                    
-                    const scale = Math.max(width / sourceImg.width, height / sourceImg.height);
-                    const x = (width - sourceImg.width * scale) / 2;
-                    const y = (height - sourceImg.height * scale) / 2;
-                    oCtx.drawImage(sourceImg, x, y, sourceImg.width * scale, sourceImg.height * scale);
-                    
-                    const imgData = oCtx.getImageData(0, 0, width, height);
-                    const pixels = imgData.data;
-                    const edges = [];
-                    
-                    for (let py = 1; py < height - 1; py++) {
-                        for (let px = 1; px < width - 1; px++) {
-                            const i = (py * width + px) * 4;
-                            const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
-                            const gray = r * 0.299 + g * 0.587 + b * 0.114;
-                            
-                            const rightI = (py * width + (px + 1)) * 4;
-                            const bottomI = ((py + 1) * width + px) * 4;
-                            
-                            const rightGray = pixels[rightI] * 0.299 + pixels[rightI+1] * 0.587 + pixels[rightI+2] * 0.114;
-                            const bottomGray = pixels[bottomI] * 0.299 + pixels[bottomI+1] * 0.587 + pixels[bottomI+2] * 0.114;
-                            
-                            const diff = Math.abs(gray - rightGray) + Math.abs(gray - bottomGray);
-                            
-                            if (diff > 25) { 
-                                edges.push({ x: px, y: py, intensity: diff });
+                                    // Sequence fully complete, resolve master promise
+                                    setTimeout(resolveSequence, 1200);
+                                }, 800);
+                            }, 1500);
+                        });
+                }
+                
+                function startSketching(sourceImg, config) {
+                    return new Promise(resolve => {
+                        const canvas = document.getElementById(config.canvasId);
+                        const origPhoto = document.getElementById(config.origPhotoId);
+                        if (!canvas || !origPhoto) return resolve();
+                        
+                        const sCtx = canvas.getContext('2d', { willReadFrequently: true });
+                        const width = canvas.width;
+                        const height = canvas.height;
+                        
+                        const offscreen = document.createElement('canvas');
+                        offscreen.width = width;
+                        offscreen.height = height;
+                        const oCtx = offscreen.getContext('2d');
+                        
+                        oCtx.fillStyle = '#fff';
+                        oCtx.fillRect(0, 0, width, height);
+                        
+                        const scale = Math.max(width / sourceImg.width, height / sourceImg.height);
+                        const x = (width - sourceImg.width * scale) / 2;
+                        const y = (height - sourceImg.height * scale) / 2;
+                        oCtx.drawImage(sourceImg, x, y, sourceImg.width * scale, sourceImg.height * scale);
+                        
+                        const imgData = oCtx.getImageData(0, 0, width, height);
+                        const pixels = imgData.data;
+                        const edges = [];
+                        
+                        for (let py = 1; py < height - 1; py++) {
+                            for (let px = 1; px < width - 1; px++) {
+                                const i = (py * width + px) * 4;
+                                const r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+                                const gray = r * 0.299 + g * 0.587 + b * 0.114;
+                                
+                                const rightI = (py * width + (px + 1)) * 4;
+                                const bottomI = ((py + 1) * width + px) * 4;
+                                
+                                const rightGray = pixels[rightI] * 0.299 + pixels[rightI+1] * 0.587 + pixels[rightI+2] * 0.114;
+                                const bottomGray = pixels[bottomI] * 0.299 + pixels[bottomI+1] * 0.587 + pixels[bottomI+2] * 0.114;
+                                
+                                const diff = Math.abs(gray - rightGray) + Math.abs(gray - bottomGray);
+                                
+                                if (diff > 25) { 
+                                    edges.push({ x: px, y: py, intensity: diff });
+                                }
                             }
                         }
-                    }
-                    
-                    edges.sort(() => Math.random() - 0.5);
-                    
-                    sCtx.fillStyle = '#fff';
-                    sCtx.fillRect(0, 0, width, height);
-                    
-                    let i = 0;
-                    const batchSize = Math.max(15, Math.floor(edges.length / 120));
-                    
-                    // Fade out original photo immediately as sketching starts
-                    setTimeout(() => {
-                        origPhoto.classList.add('fade-out');
-                    }, 100);
-                    
-                    function drawFrame() {
-                        sCtx.fillStyle = 'rgba(70, 60, 60, 0.4)';
-                        for (let b = 0; b < batchSize && i < edges.length; b++, i++) {
-                            const p = edges[i];
-                            sCtx.beginPath();
-                            sCtx.arc(p.x, p.y, 0.8, 0, Math.PI * 2);
-                            sCtx.fill();
-                        }
                         
-                        if (i < edges.length) {
-                            requestAnimationFrame(drawFrame);
-                        } else {
-                            setTimeout(resolve, 800);
+                        edges.sort(() => Math.random() - 0.5);
+                        
+                        sCtx.fillStyle = '#fff';
+                        sCtx.fillRect(0, 0, width, height);
+                        
+                        let i = 0;
+                        const batchSize = Math.max(15, Math.floor(edges.length / 120));
+                        
+                        setTimeout(() => {
+                            origPhoto.classList.add('fade-out');
+                        }, 100);
+                        
+                        function drawFrame() {
+                            sCtx.fillStyle = 'rgba(70, 60, 60, 0.4)';
+                            for (let b = 0; b < batchSize && i < edges.length; b++, i++) {
+                                const p = edges[i];
+                                sCtx.beginPath();
+                                sCtx.arc(p.x, p.y, 0.8, 0, Math.PI * 2);
+                                sCtx.fill();
+                            }
+                            
+                            if (i < edges.length) {
+                                requestAnimationFrame(drawFrame);
+                            } else {
+                                setTimeout(resolve, 800);
+                            }
                         }
-                    }
-                    drawFrame();
-                });
-            }
+                        drawFrame();
+                    });
+                }
+            });
         }
-        initSketchAnimation();
     })();
     </script>
 </body>
