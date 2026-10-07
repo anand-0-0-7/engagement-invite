@@ -16,7 +16,16 @@ A premium, animated, single-page web invitation for an Indian engagement ceremon
 - 🎵 **Background Music** — Plays when the envelope is opened.
 - ⏳ **Live Countdown Timer** — Ticks down to the event date.
 - 📍 **Google Maps Link** — Direct venue directions.
-- 💬 **WhatsApp RSVP** — One-tap reply button.
+
+
+---
+
+## 🔗 Invitation Links
+
+Two separate versions of the invitation have been created depending on whose side of the family you are inviting:
+
+- **For Anand's Guests (Groom's Side):** Share `anand-sneha.html` (e.g., `https://anand-0-0-7.github.io/engagement-invite/anand-sneha.html`)
+- **For Sneha's Guests (Bride's Side):** Share `sneha-anand.html` (e.g., `https://anand-0-0-7.github.io/engagement-invite/sneha-anand.html`)
 
 ---
 
@@ -59,35 +68,28 @@ Replace the placeholder names for both bride's and groom's families.
 href="https://maps.google.com/?q=28.5355,77.3910"
 ```
 
-### 7. **WhatsApp RSVP**
-```html
-href="https://wa.me/919876543210?text=..."
-```
-
-### 8. **Background Music**
+### 7. **Background Music**
 Place your shehnai/sitar MP3 in `assets/music.mp3`.
 Free sources:
 - [Pixabay - Indian Music](https://pixabay.com/music/search/indian/)
 - [Free Music Archive](https://freemusicarchive.org/)
 
-### 9. **OG Meta Tags** (after deployment)
+### 8. **OG Meta Tags** (after deployment)
 ```html
-<meta property="og:image" content="https://your-site.netlify.app/assets/og-preview.jpg" />
-<meta property="og:url" content="https://your-site.netlify.app/" />
+<meta property="og:image" content="https://anand-0-0-7.github.io/engagement-invite/assets/og-preview.jpg" />
+<meta property="og:url" content="https://anand-0-0-7.github.io/engagement-invite/" />
 ```
 
 ---
 
 ## 🚀 3-Step Free Deployment Guide
 
-### Option A: **GitHub Pages** (Easiest)
-
 1. **Create a GitHub repo:**
    ```bash
    git init
    git add .
    git commit -m "Engagement invitation"
-   git remote add origin https://github.com/YOUR_USERNAME/engagement-invite.git
+   git remote add origin https://github.com/anand-0-0-7/engagement-invite.git
    git push -u origin main
    ```
 
@@ -99,35 +101,8 @@ Free sources:
 
 3. **Share your link:**
    ```
-   https://YOUR_USERNAME.github.io/engagement-invite/
+   https://anand-0-0-7.github.io/engagement-invite/
    ```
-
----
-
-### Option B: **Netlify** (Drag & Drop)
-
-1. **Go to [netlify.com](https://app.netlify.com/drop)** and sign up (free).
-
-2. **Drag & drop** the entire `InvitationCard` folder onto the Netlify dashboard.
-
-3. **Copy your link** — Netlify gives you a URL like `https://random-name.netlify.app`. You can customize it in Site Settings.
-
----
-
-### Option C: **Vercel** (CLI)
-
-1. **Install Vercel CLI:**
-   ```bash
-   npm i -g vercel
-   ```
-
-2. **Deploy:**
-   ```bash
-   cd InvitationCard
-   vercel --prod
-   ```
-
-3. **Share the link** Vercel provides.
 
 ---
 
@@ -136,6 +111,8 @@ Free sources:
 ```
 InvitationCard/
 ├── index.html              ← Main invitation
+├── anand-sneha.html        ← Invitation for Anand's side
+├── sneha-anand.html        ← Invitation for Sneha's side
 ├── assets/
 │   ├── og-preview.jpg      ← WhatsApp link preview image (1200×630)
 │   ├── music.mp3           ← Your shehnai/sitar audio (add your own)
