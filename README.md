@@ -76,7 +76,7 @@ Free sources:
 
 ### 8. **OG Meta Tags** (after deployment)
 ```html
-<meta property="og:image" content="https://anand-0-0-7.github.io/engagement-invite/assets/og-preview.jpg" />
+<meta property="og:image" content="https://anand-0-0-7.github.io/engagement-invite/assets/og_landscape.jpg" />
 <meta property="og:url" content="https://anand-0-0-7.github.io/engagement-invite/" />
 ```
 
